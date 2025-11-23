@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 
 interface HeroMediaProps {
@@ -12,6 +12,8 @@ interface HeroMediaProps {
   alt?: string
   /** Additional CSS classes */
   className?: string
+  /** Timeout in ms before falling back to image (default: 10000ms) */
+  videoTimeout?: number
 }
 
 /**
@@ -22,13 +24,85 @@ export default function HeroMedia({
   video = '/videos/future-insights/tenet-edit.MP4',
   image = '/images/future-insights/ai-legal-practice.jpg',
   alt = 'Legal Futurism - AI and Legal Innovation',
-  className = ''
+  className = '',
+  videoTimeout = 10000
 }: HeroMediaProps) {
-  const [mediaError, setMediaError] = useState(false)
-  const [videoLoaded, setVideoLoaded] = useState(false)
+  const [videoStatus, setVideoStatus] = useState<'loading' | 'loaded' | 'error' | 'timeout'>('loading')
+  const [showFallback, setShowFallback] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const timeoutRef = useRef<NodeJS.Timeout>()
 
-  const hasVideo = Boolean(video) && !mediaError
+  // Timeout mechanism for video loading
+  useEffect(() => {
+    if (!video) {
+      setShowFallback(true)
+      return
+    }
+
+    // Set timeout for video loading
+    console.log(`[HeroMedia] Starting video load timeout (${videoTimeout}ms) for:`, video)
+    timeoutRef.current = setTimeout(() => {
+      if (videoStatus === 'loading') {
+        console.warn('[HeroMedia] Video loading timeout reached, falling back to image')
+        setVideoStatus('timeout')
+        setShowFallback(true)
+      }
+    }, videoTimeout)
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [video, videoTimeout, videoStatus])
+
+  const handleVideoLoadedData = () => {
+    console.log('[HeroMedia] Video loaded successfully:', video)
+    setVideoStatus('loaded')
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    // Attempt to play the video
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.error('[HeroMedia] Video play failed:', error)
+      })
+    }
+  }
+
+  const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    const videoElement = e.currentTarget
+    const error = videoElement.error
+
+    console.error('[HeroMedia] Video error occurred:', {
+      code: error?.code,
+      message: error?.message,
+      src: video,
+      networkState: videoElement.networkState,
+      readyState: videoElement.readyState
+    })
+
+    setVideoStatus('error')
+    setShowFallback(true)
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+  }
+
+  const handleVideoCanPlay = () => {
+    console.log('[HeroMedia] Video can play:', video)
+  }
+
+  const handleVideoLoadStart = () => {
+    console.log('[HeroMedia] Video load started:', video)
+  }
+
+  const hasVideo = Boolean(video)
   const hasImage = Boolean(image)
+  const shouldShowVideo = hasVideo && !showFallback
 
   return (
     <div className={`relative w-full ${className}`}>
@@ -39,36 +113,36 @@ export default function HeroMedia({
 
         {/* Media container with border and shadow */}
         <div className="relative w-full h-full overflow-hidden rounded-2xl ring-2 ring-white/10 shadow-2xl bg-black">
-          {hasVideo ? (
+          {shouldShowVideo ? (
             <>
-              {/* Video element */}
+              {/* Video element - shown immediately */}
               <video
+                ref={videoRef}
                 src={video}
                 poster={image}
-                className={`w-full h-full object-cover transition-all duration-700 ${
-                  videoLoaded ? 'opacity-100 scale-100 group-hover:scale-105' : 'opacity-0 scale-95'
-                }`}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 autoPlay
                 muted
                 loop
                 playsInline
-                onLoadedData={() => setVideoLoaded(true)}
-                onError={() => {
-                  console.error('Video failed to load, falling back to image')
-                  setMediaError(true)
-                }}
+                preload="auto"
+                onLoadedData={handleVideoLoadedData}
+                onError={handleVideoError}
+                onCanPlay={handleVideoCanPlay}
+                onLoadStart={handleVideoLoadStart}
               />
 
-              {/* Loading state with poster image */}
-              {!videoLoaded && hasImage && (
-                <div className="absolute inset-0">
-                  <Image
-                    src={image}
-                    alt={alt}
-                    fill
-                    className="object-cover animate-pulse"
-                    priority
-                  />
+              {/* Loading indicator - shown while video is loading */}
+              {videoStatus === 'loading' && (
+                <div className="absolute inset-0 bg-black/80 flex items-center justify-center backdrop-blur-sm">
+                  <div className="text-center space-y-4">
+                    {/* Spinner */}
+                    <div className="relative w-16 h-16 mx-auto">
+                      <div className="absolute inset-0 border-4 border-blue-500/20 rounded-full"></div>
+                      <div className="absolute inset-0 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
+                    </div>
+                    <p className="text-gray-300 text-sm sm:text-base font-medium">Loading video...</p>
+                  </div>
                 </div>
               )}
             </>
@@ -81,7 +155,9 @@ export default function HeroMedia({
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 priority
-                onError={() => setMediaError(true)}
+                onError={() => {
+                  console.error('[HeroMedia] Image fallback also failed to load:', image)
+                }}
               />
             </div>
           ) : (
@@ -101,12 +177,12 @@ export default function HeroMedia({
                     d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
                   />
                 </svg>
-                <p className="text-gray-500 text-sm sm:text-base">Media content loading...</p>
+                <p className="text-gray-500 text-sm sm:text-base">Media content unavailable</p>
               </div>
             </div>
           )}
 
-          {/* Subtle overlay gradient for better text contrast (optional) */}
+          {/* Subtle overlay gradient for better text contrast */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
         </div>
       </div>
