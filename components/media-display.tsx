@@ -13,10 +13,11 @@ interface MediaDisplayProps {
 
 export default function MediaDisplay({ image, video, title, isPreview = false, className = '' }: MediaDisplayProps) {
   const [mediaError, setMediaError] = useState(false)
+  const [videoError, setVideoError] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
-  
-  // Always show video if available, for both preview and detail view
-  const hasVideo = Boolean(video)
+
+  // Show video only if available and no error occurred
+  const hasVideo = Boolean(video) && !videoError
   const hasImage = Boolean(image)
   
   // Setup video playback behavior for preview mode
@@ -32,10 +33,11 @@ export default function MediaDisplay({ image, video, title, isPreview = false, c
         try {
           await videoRef.current?.play()
         } catch (err) {
-          console.error("Autoplay failed:", err)
+          console.error("MediaDisplay: Autoplay failed:", err)
+          console.error("Video path:", video)
         }
       }
-      
+
       playVideo()
     }
   }, [hasVideo, isPreview])
@@ -45,7 +47,7 @@ export default function MediaDisplay({ image, video, title, isPreview = false, c
       {hasVideo ? (
         // Video display
         <div className="relative w-full h-full aspect-video">
-          <video 
+          <video
             ref={videoRef}
             src={video}
             poster={image}
@@ -53,32 +55,17 @@ export default function MediaDisplay({ image, video, title, isPreview = false, c
             muted={isPreview}
             loop={isPreview}
             playsInline={isPreview}
-            onError={() => setMediaError(true)}
+            onError={(e) => {
+              console.error('MediaDisplay: Video failed to load:', video)
+              console.error('Error type:', e.type)
+              console.error('This is likely due to Git LFS not being properly configured in production.')
+              console.error('Poster/fallback image:', image)
+              console.error('Preview mode:', isPreview)
+              setVideoError(true)
+              setMediaError(true)
+            }}
             className="w-full h-full object-cover"
           />
-          
-          {/* Fallback if video fails to load */}
-          {(mediaError && hasImage) && (
-            <Image
-              src={image!}
-              alt={title || 'Article image'}
-              fill
-              className="object-cover"
-              onError={() => setMediaError(true)}
-            />
-          )}
-          
-          {/* Complete fallback if both video and image fail */}
-          {(mediaError && !hasImage) && (
-            <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center">
-              <div className="text-center">
-                <svg className="w-12 h-12 mx-auto text-gray-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-                </svg>
-                <p className="text-gray-400">{title || 'Media unavailable'}</p>
-              </div>
-            </div>
-          )}
           
           {/* Play button overlay - REMOVED FOR PREVIEW MODE */}
           {/* Only show in non-preview mode if explicitly needed */}
@@ -93,14 +80,17 @@ export default function MediaDisplay({ image, video, title, isPreview = false, c
           )}
         </div>
       ) : hasImage ? (
-        // Image display (when no video)
+        // Image display (when no video or video failed)
         <div className="relative w-full h-full aspect-video">
           <Image
             src={image!}
             alt={title || 'Article image'}
             fill
             className="object-cover"
-            onError={() => setMediaError(true)}
+            onError={(e) => {
+              console.error('MediaDisplay: Image fallback also failed to load:', image)
+              setMediaError(true)
+            }}
           />
         </div>
       ) : (
