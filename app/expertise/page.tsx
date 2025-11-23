@@ -5,9 +5,9 @@ import EnhancedCoreCapabilities from '@/components/enhanced-core-capabilities'
 
 export default function ExpertisePage() {
   return (
-    <section className="min-h-screen bg-black text-white pb-24">
+    <section className="min-h-screen bg-black text-white pb-16 sm:pb-24">
       {/* Hero Section */}
-      <div className="relative h-screen max-h-[600px] w-full overflow-hidden">
+      <div className="relative h-[60vh] sm:h-[70vh] max-h-[600px] w-full overflow-hidden">
         <video
           src="/videos/future-insights/tenet-edit.MP4"
           autoPlay
@@ -16,16 +16,18 @@ export default function ExpertisePage() {
           playsInline
           className="object-cover w-full h-full opacity-40"
         />
-        
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6">LEGAL FUTURISM EXPERTISE</h1>
-          <p className="text-xl md:text-2xl font-serif italic text-gray-300 max-w-3xl">
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6">
+            LEGAL FUTURISM EXPERTISE
+          </h1>
+          <p className="text-lg sm:text-xl md:text-2xl font-serif italic text-gray-300 max-w-3xl">
             Creating the Future of Law Through AI, Creativity, and Strategic Foresight
           </p>
         </div>
       </div>
 
-      <div className="container max-w-6xl mx-auto px-4 py-16">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <p className="text-xl leading-relaxed mb-16 border-l-4 border-indigo-700 pl-6 py-2">
           At Trial & Tribulation, we operate where most never venture, the powerful intersection of legal expertise,
           technological disruption, and media evolution. While others remain trapped in conventional thinking, our

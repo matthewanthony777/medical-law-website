@@ -7,33 +7,33 @@ interface StrategicSectionProps {
   bullets: string[]
 }
 
-export default function StrategicSection({ 
-  icon, 
-  title, 
-  description, 
-  bullets 
+export default function StrategicSection({
+  icon,
+  title,
+  description,
+  bullets
 }: StrategicSectionProps) {
   return (
-    <div className="relative p-8 rounded-lg border border-white/10 bg-black hover:border-white/20 transition-all duration-300 group overflow-hidden">
+    <div className="relative p-6 sm:p-8 lg:p-10 rounded-xl border border-white/10 bg-black hover:border-white/30 transition-all duration-300 group overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1">
       {/* Animated gradient background on hover */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-700">
         <div className={`absolute inset-0 bg-gradient-to-br ${
-          icon === 'brain' ? 'from-purple-600/40' : 
-          icon === 'shield' ? 'from-blue-600/40' : 
+          icon === 'brain' ? 'from-purple-600/40' :
+          icon === 'shield' ? 'from-blue-600/40' :
           'from-emerald-600/40'
         } to-transparent blur-xl`}></div>
       </div>
-      
-      <div className="flex flex-col h-full relative z-10">
+
+      <div className="flex flex-col h-full relative z-10 space-y-5 sm:space-y-6">
         {/* Enhanced icon section */}
-        <div className="mb-6 relative">
+        <div className="relative">
           <div className={`absolute inset-0 rounded-full ${
-            icon === 'brain' ? 'bg-purple-600' : 
-            icon === 'shield' ? 'bg-blue-600' : 
+            icon === 'brain' ? 'bg-purple-600' :
+            icon === 'shield' ? 'bg-blue-600' :
             'bg-emerald-600'
           } opacity-10 blur-md group-hover:opacity-20 transition-all duration-300`}></div>
-          
-          <div className="w-16 h-16 rounded-full bg-zinc-800 flex items-center justify-center relative z-10 group-hover:bg-zinc-800/80 transition-all duration-300">
+
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-zinc-800 flex items-center justify-center relative z-10 group-hover:bg-zinc-800/80 transition-all duration-300 group-hover:scale-110">
             {icon === 'brain' && (
               <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15.5 14C14.0712 14 12.9 12.8288 12.9 11.4V10.6C12.9 9.17123 14.0712 8 15.5 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -70,31 +70,31 @@ export default function StrategicSection({
         </div>
         
         {/* Title with trademark */}
-        <h3 className="text-2xl font-bold mb-2 group-hover:translate-x-1 transition-transform duration-300">
+        <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold group-hover:translate-x-1 transition-transform duration-300">
           {title}
         </h3>
-        
+
         {/* Description */}
-        <p className="text-gray-400 mb-6 group-hover:text-gray-300 transition-colors duration-300">
+        <p className="text-sm sm:text-base text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
           {description}
         </p>
-        
+
         {/* Bullets with enhanced styling */}
-        <ul className="space-y-4 mt-auto">
+        <ul className="space-y-3 sm:space-y-4 mt-auto">
           {bullets.map((bullet, index) => (
             <li key={index} className="flex items-start group/item">
-              <svg 
-                className="w-5 h-5 text-gray-400 mr-2 mt-0.5 group-hover/item:text-white transition-colors duration-300" 
-                viewBox="0 0 20 20" 
-                fill="none" 
+              <svg
+                className="w-5 h-5 flex-shrink-0 text-gray-400 mr-2 sm:mr-3 mt-0.5 group-hover/item:text-white transition-colors duration-300"
+                viewBox="0 0 20 20"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path 
-                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" 
+                <path
+                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
                   fill="currentColor"
                 />
               </svg>
-              <span className="text-sm text-gray-300 group-hover/item:text-gray-200 transition-colors duration-300">
+              <span className="text-sm sm:text-base text-gray-300 group-hover/item:text-gray-200 transition-colors duration-300">
                 {bullet}
               </span>
             </li>
