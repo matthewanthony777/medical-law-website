@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ThemeToggle } from './theme-toggle'
-import { HomeIcon, FileTextIcon, PersonIcon, ChatBubbleIcon, HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons'
+import { HomeIcon, FileTextIcon, LayersIcon, PersonIcon, ChatBubbleIcon, HamburgerMenuIcon, Cross1Icon } from '@radix-ui/react-icons'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -27,6 +27,10 @@ export default function Header() {
               <li className="transition-colors hover:text-white flex items-center">
                 <FileTextIcon className="mr-2 h-4 w-4" />
                 <Link href="/future-insights">Future-Insights</Link>
+              </li>
+              <li className="transition-colors hover:text-white flex items-center">
+                <LayersIcon className="mr-2 h-4 w-4" />
+                <Link href="/projects">Projects</Link>
               </li>
               <li className="transition-colors hover:text-white flex items-center">
                 <PersonIcon className="mr-2 h-4 w-4" />
@@ -71,6 +75,12 @@ export default function Header() {
                 <Link href="/future-insights" className="flex items-center" onClick={() => setMobileMenuOpen(false)}>
                   <FileTextIcon className="mr-2 h-4 w-4" />
                   <span>Future-Insights</span>
+                </Link>
+              </li>
+              <li className="transition-colors hover:text-white px-3 py-2 rounded-md hover:bg-white/10">
+                <Link href="/projects" className="flex items-center" onClick={() => setMobileMenuOpen(false)}>
+                  <LayersIcon className="mr-2 h-4 w-4" />
+                  <span>Projects</span>
                 </Link>
               </li>
               <li className="transition-colors hover:text-white px-3 py-2 rounded-md hover:bg-white/10">
