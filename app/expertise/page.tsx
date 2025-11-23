@@ -1,21 +1,46 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import EnhancedCoreCapabilities from '@/components/enhanced-core-capabilities'
 
 export default function ExpertisePage() {
+  const [videoError, setVideoError] = useState(false)
+
   return (
     <section className="min-h-screen bg-black text-white pb-16 sm:pb-24">
       {/* Hero Section */}
       <div className="relative h-[60vh] sm:h-[70vh] max-h-[600px] w-full overflow-hidden">
-        <video
-          src="/videos/future-insights/tenet-edit.MP4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="object-cover w-full h-full opacity-40"
-        />
+        {!videoError ? (
+          <video
+            src="/videos/future-insights/tenet-edit.MP4"
+            poster="/images/future-insights/ai-legal-practice.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="object-cover w-full h-full opacity-40"
+            onError={(e) => {
+              console.error('Expertise page: Video failed to load:', e)
+              console.error('Video path: /videos/future-insights/tenet-edit.MP4')
+              console.error('This is likely due to Git LFS not being properly configured in production.')
+              console.error('Falling back to static image.')
+              setVideoError(true)
+            }}
+          />
+        ) : (
+          <div className="relative w-full h-full">
+            <Image
+              src="/images/future-insights/ai-legal-practice.jpg"
+              alt="Legal Futurism - AI and Legal Innovation"
+              fill
+              className="object-cover opacity-40"
+              priority
+            />
+          </div>
+        )}
 
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 sm:px-6">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 sm:mb-6">

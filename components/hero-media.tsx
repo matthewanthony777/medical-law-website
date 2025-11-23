@@ -25,6 +25,7 @@ export default function HeroMedia({
   className = ''
 }: HeroMediaProps) {
   const [mediaError, setMediaError] = useState(false)
+  const [videoLoadError, setVideoLoadError] = useState<string>('')
 
   const hasVideo = Boolean(video) && !mediaError
   const hasImage = Boolean(image)
@@ -48,8 +49,13 @@ export default function HeroMedia({
               muted
               loop
               playsInline
-              onError={() => {
-                console.error('Video failed to load, falling back to image')
+              onError={(e) => {
+                const errorMsg = `Video failed to load: ${video}. Error type: ${e.type}. Falling back to image.`
+                console.error(errorMsg)
+                console.error('This is likely due to Git LFS not being properly configured in production.')
+                console.error('Video path:', video)
+                console.error('Fallback image:', image)
+                setVideoLoadError(errorMsg)
                 setMediaError(true)
               }}
             />
@@ -62,7 +68,10 @@ export default function HeroMedia({
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 priority
-                onError={() => setMediaError(true)}
+                onError={(e) => {
+                  console.error('Image fallback also failed to load:', image)
+                  setMediaError(true)
+                }}
               />
             </div>
           ) : (
