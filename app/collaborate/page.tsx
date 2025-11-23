@@ -3,17 +3,17 @@ import CollaborateForm from '@/components/collaborate-form'
 
 export default function CollaboratePage() {
   return (
-    <section className="min-h-screen bg-black text-white pb-24 pt-40">
-      <div className="container max-w-6xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-serif font-bold mb-6">Work With Us</h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            We help legal professionals thrive in the age of AI and technological disruption through strategic career guidance, 
+    <section className="min-h-screen bg-black text-white pb-16 sm:pb-24 pt-32 sm:pt-40">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 sm:mb-16 space-y-4 sm:space-y-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold">Work With Us</h1>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto px-4">
+            We help legal professionals thrive in the age of AI and technological disruption through strategic career guidance,
             digital presence development, and creative content support.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-12 sm:mb-16">
           {/* Career Strategy & Transitions */}
           <div className="bg-zinc-900/50 border border-white/10 rounded-lg p-8 hover:border-indigo-500/30 hover:bg-zinc-900/80 transition-all duration-300">
             <div className="mb-4">
