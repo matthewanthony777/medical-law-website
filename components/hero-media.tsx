@@ -25,7 +25,6 @@ export default function HeroMedia({
   className = ''
 }: HeroMediaProps) {
   const [mediaError, setMediaError] = useState(false)
-  const [videoLoaded, setVideoLoaded] = useState(false)
 
   const hasVideo = Boolean(video) && !mediaError
   const hasImage = Boolean(image)
@@ -40,38 +39,20 @@ export default function HeroMedia({
         {/* Media container with border and shadow */}
         <div className="relative w-full h-full overflow-hidden rounded-2xl ring-2 ring-white/10 shadow-2xl bg-black">
           {hasVideo ? (
-            <>
-              {/* Video element */}
-              <video
-                src={video}
-                poster={image}
-                className={`w-full h-full object-cover transition-all duration-700 ${
-                  videoLoaded ? 'opacity-100 scale-100 group-hover:scale-105' : 'opacity-0 scale-95'
-                }`}
-                autoPlay
-                muted
-                loop
-                playsInline
-                onLoadedData={() => setVideoLoaded(true)}
-                onError={() => {
-                  console.error('Video failed to load, falling back to image')
-                  setMediaError(true)
-                }}
-              />
-
-              {/* Loading state with poster image */}
-              {!videoLoaded && hasImage && (
-                <div className="absolute inset-0">
-                  <Image
-                    src={image}
-                    alt={alt}
-                    fill
-                    className="object-cover animate-pulse"
-                    priority
-                  />
-                </div>
-              )}
-            </>
+            /* Video element - plays immediately, shows poster until loaded */
+            <video
+              src={video}
+              poster={image}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              autoPlay
+              muted
+              loop
+              playsInline
+              onError={() => {
+                console.error('Video failed to load, falling back to image')
+                setMediaError(true)
+              }}
+            />
           ) : hasImage ? (
             /* Image fallback */
             <div className="relative w-full h-full">
