@@ -4,6 +4,7 @@ import { ArrowRightIcon } from '@radix-ui/react-icons'
 import NewsletterForm from '@/components/newsletter-form'
 import StrategicSection from '@/components/strategic-section'
 import AnimatedBackground from '@/components/animated-background'
+import HeroMedia from '@/components/hero-media'
 
 export default function Home() {
   return (
@@ -98,24 +99,13 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Enhanced Hero Video Section */}
-            <div className="relative hidden lg:block">
-              <div className="relative w-full h-[500px] lg:h-[600px] group">
-                {/* Glow effect */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl opacity-30 group-hover:opacity-50 blur-xl transition-opacity duration-500"></div>
-
-                {/* Video container */}
-                <div className="relative w-full h-full overflow-hidden rounded-2xl ring-2 ring-white/10 shadow-2xl">
-                  <video
-                    src="/videos/future-insights/tenet-edit.MP4"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                  />
-                </div>
-              </div>
+            {/* Enhanced Hero Media Section */}
+            <div className="relative">
+              <HeroMedia
+                video="/videos/future-insights/tenet-edit.MP4"
+                image="/images/future-insights/ai-legal-practice.jpg"
+                alt="Legal Futurism - Where Law, AI, and Media Converge"
+              />
             </div>
           </div>
         </div>
